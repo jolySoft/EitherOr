@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>WenEnabled.Tv.NVar.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
