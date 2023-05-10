@@ -2,12 +2,13 @@
 
 public class Right<TLeft, TRight>: Either<TLeft, TRight>
 {
-    private TRight _right;
-
-    public Right(TRight right)
+    internal Right(TRight right)
     {
         _right = right;
     }
+
+    public override bool IsRight => true;
+    public override bool IsLeft => false;
 
     public override TRight Get()
     {

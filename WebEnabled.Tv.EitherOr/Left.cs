@@ -2,12 +2,13 @@
 
 public class Left<TLeft, TRight> : Either<TLeft, TRight>
 {
-    private TLeft _left;
-
-    public Left(TLeft left)
+    internal Left(TLeft left)
     {
         _left = left;
     }
+
+    public override bool IsRight => false;
+    public override bool IsLeft => true;
 
     public override TRight Get()
     {
