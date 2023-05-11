@@ -7,7 +7,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>WenEnabled.Tv.NVar.Tests</RootNamespace>
+    <RootNamespace>WenEnabled.Tv.EitherOr.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

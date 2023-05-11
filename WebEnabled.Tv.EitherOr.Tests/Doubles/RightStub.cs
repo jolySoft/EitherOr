@@ -1,17 +1,22 @@
-﻿namespace WenEnabled.Tv.NVar.Tests;
+﻿namespace WenEnabled.Tv.EitherOr.Tests.Doubles;
 
 public class RightStub
 {
-    private readonly string _s;
+    public string Stringly { get; set; }
 
     public RightStub(string s)
     {
-        _s = s;
+        Stringly = s;
+    }
+
+    public void Throwly()
+    {
+        throw new ApplicationException();
     }
 
     protected bool Equals(RightStub other)
     {
-        return _s == other._s;
+        return Stringly == other.Stringly;
     }
 
     public override bool Equals(object? obj)
@@ -24,7 +29,7 @@ public class RightStub
 
     public override int GetHashCode()
     {
-        return _s.GetHashCode();
+        return Stringly.GetHashCode();
     }
 }
 

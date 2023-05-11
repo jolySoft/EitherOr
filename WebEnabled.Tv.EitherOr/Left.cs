@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace WebEnabled.Tv.EitherOr;
+﻿namespace WebEnabled.Tv.EitherOr;
 
 public class Left<TLeft, TRight> : Either<TLeft, TRight>
 {
