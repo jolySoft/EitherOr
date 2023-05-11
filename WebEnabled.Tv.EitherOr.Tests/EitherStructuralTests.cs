@@ -11,8 +11,8 @@ public class EitherStructuralTests
 
     public EitherStructuralTests()
     {
-        _rightValue = new RightStub();
-        _leftValue = new LeftStub();
+        _rightValue = new RightStub("1");
+        _leftValue = new LeftStub(1);
     }
 
     [Fact]
