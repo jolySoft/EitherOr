@@ -1,6 +1,8 @@
 ﻿namespace WebEnabled.Tv.EitherOr;
 
-public abstract class Either<TLeft, TRight>
+using System.Diagnostics.CodeAnalysis;
+
+public abstract class Either<TLeft, TRight> : IEither<TLeft, TRight>, IEitherMaps<TLeft, TRight>
 {
     // ReSharper disable once InconsistentNaming
     protected TLeft _left;
@@ -19,20 +21,25 @@ public abstract class Either<TLeft, TRight>
 
     public static Either<TLeft, TRight> Left(TLeft left) => new Left<TLeft, TRight>(left);
 
-    public Either<TLeftResponse, TRightResponse> BiMap<TLeftResponse, TRightResponse>(Func<TLeft, TLeftResponse> leftFunc, Func<TRight, TRightResponse> rightFunc)
+    public IEither<TLeftResponse, TRightResponse> BiMap<TLeftResponse, TRightResponse>(Func<TLeft, TLeftResponse> leftFunc, Func<TRight, TRightResponse> rightFunc)
     {
         if (IsRight) return new Right<TLeftResponse, TRightResponse>(rightFunc.Invoke(Get()));
 
         return new Left<TLeftResponse, TRightResponse>(leftFunc.Invoke(GetLeft()));
     }
 
-    public Either<TLeft, TRightResponse> Map<TRightResponse>(Func<TRight, TRightResponse> rightFunc)
+    public IEither<TLeft, TRightResponse> Map<TRightResponse>(Func<TRight, TRightResponse> rightFunc)
     {
         return IsRight ? Either<TLeft, TRightResponse>.Right(rightFunc.Invoke(Get())) : new Left<TLeft, TRightResponse>(GetLeft());
     }
 
-    public Either<TLeftResponse, TRight> MapLeft<TLeftResponse>(Func<TLeft, TLeftResponse> leftFunc)
+    public IEither<TLeftResponse, TRight> MapLeft<TLeftResponse>(Func<TLeft, TLeftResponse> leftFunc)
     {
         return IsLeft ? Either<TLeftResponse, TRight>.Left(leftFunc.Invoke(GetLeft())) : Either<TLeftResponse, TRight>.Right(Get());
     }
+
+    // public Either<TLeft, TRightResponse> FlatMap<TRightResponse>(Func<TRight, Either<TLeft, TRightResponse>> rightFunc)
+    // {
+    //     return IsRight ? (Either<TLeft, TRightResponse>)rightFunc.Invoke(Get())
+    // }
 }

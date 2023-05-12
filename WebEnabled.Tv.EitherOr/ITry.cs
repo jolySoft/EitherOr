@@ -4,7 +4,23 @@ using Void;
 
 public interface ITry<TResult> : ITry
 {
-    TResult Result { get; }    
+    TResult Result { get; }
+
+    new ITry<TResult> Finally(Action action)
+    {
+        try
+        {
+            action.Invoke();
+            return this;
+        }
+        catch (Exception? e)
+        {
+            return new Failure<TResult>(e);
+        }
+    }
+    
+    new Either<Exception, TResult> ToEither();
+    
 }
 
 public interface ITry

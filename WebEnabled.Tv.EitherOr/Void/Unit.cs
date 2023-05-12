@@ -18,7 +18,7 @@ public record Unit : IComparable<Unit>
 
     private sealed class VoidedEqualityComparer : IEqualityComparer<Unit>
     {
-        public bool Equals(Unit x, Unit y)
+        public bool Equals(Unit? x, Unit? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (ReferenceEquals(x, null)) return false;

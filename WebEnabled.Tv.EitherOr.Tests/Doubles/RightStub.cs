@@ -9,7 +9,7 @@ public class RightStub
         Stringly = s;
     }
 
-    public void Throwly()
+    public RightStub Throwly()
     {
         throw new ApplicationException();
     }

@@ -5,7 +5,7 @@ using Void;
 public abstract class Try<TResult> : Try, ITry<TResult>
 {
     public abstract TResult Result { get; }
-    
+
     public static ITry<TResult> Of<TResult>(Func<TResult> func)
     {
         try
@@ -17,6 +17,11 @@ public abstract class Try<TResult> : Try, ITry<TResult>
         {
             return new Failure<TResult>(e);
         }
+    }
+    
+    public new Either<Exception, TResult> ToEither()
+    {
+        return IsSuccessful() ? Either<Exception, TResult>.Right(Result) : Either<Exception, TResult>.Left(Exp);
     }
 }
 

@@ -12,35 +12,23 @@ public class ActionTryTests
     {
         var rightRef = new RightStub("Initial");
         
-        Try.Run(() => rightRef.Stringly = "Updated").Finally(() => rightRef.Stringly = "Finally");
+        var result = Try.Run(() => rightRef.Stringly = "Updated").Finally(() => rightRef.Stringly = "Finally");
         
+        result.IsSuccessful().ShouldBeTrue();
         rightRef.Stringly.ShouldBe("Finally");
-    }
-
-    [Fact]
-    public void FailedRunShouldReturnFailue()
-    {
-        var rightRef = new RightStub("Initial");
-        var expected = new Failure(new ApplicationException());
-
-        var failure = Try.Run(() => rightRef.Throwly());
-        
-        //Don't like this assertion, think of a better way
-        failure.ShouldBeOfType(expected.GetType());
-        failure.IsFailure().ShouldBeTrue();
     }
 
     [Fact]
     public void FailedRunCanChainOnFinally()
     {
         var rightRef = new RightStub("Initial");
-        var expected = new Failure(new ApplicationException());
+        var expected = new ApplicationException();
 
         var failure = Try.Run(() => rightRef.Throwly()).Finally(() => rightRef.Stringly = "Updated");
-        
-        //Don't like this assertion, think of a better way
-        failure.ShouldBeOfType(expected.GetType());
+
         failure.IsFailure().ShouldBeTrue();
+        //Don't like this assertion, think of a better way
+        failure.Exp.ShouldBeOfType(expected.GetType());
     }
 
     [Fact]

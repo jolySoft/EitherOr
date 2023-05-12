@@ -6,16 +6,21 @@ public class Failure<TResult> : Failure, ITry<TResult>
 {
     public Failure(Exception? exp) : base(exp) {}
     
-    public bool IsSuccessful() => base.IsSuccessful();
+    // public bool IsSuccessful() => base.IsSuccessful();
+    //
+    // public bool IsFailure() => base.IsSuccessful();
 
-    public bool IsFailure() => base.IsSuccessful();
+    // public Either<Exception, Unit> ToEither()
+    // {
+    //     throw new NotImplementedException();
+    // }
 
-    public Either<Exception, Unit> ToEither()
+    public TResult Result => throw new NotImplementedException("This is a failure");
+    
+    Either<Exception, TResult> ITry<TResult>.ToEither()
     {
         throw new NotImplementedException();
     }
-
-    public TResult Result => throw new NotImplementedException("This is a failure");
 }
 
 public class Failure : ITry
