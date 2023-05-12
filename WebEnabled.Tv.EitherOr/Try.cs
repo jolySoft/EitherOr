@@ -2,10 +2,30 @@
 
 using Void;
 
+public abstract class Try<TResult> : Try, ITry<TResult>
+{
+    public abstract TResult Result { get; }
+    
+    public static ITry<TResult> Of<TResult>(Func<TResult> func)
+    {
+        try
+        {
+            var result = func.Invoke();
+            return new Success<TResult>(result);
+        }
+        catch (Exception e)
+        {
+            return new Failure<TResult>(e);
+        }
+    }
+}
+
 public abstract class Try : ITry
 {
     public abstract bool IsSuccessful();
+    
     public abstract bool IsFailure();
+    
     public Exception? Exp { get; protected init; }
 
     public static ITry Run(Action action)
@@ -13,7 +33,7 @@ public abstract class Try : ITry
         try
         {
             action.Invoke();
-            return new Success();
+            return new Success<Unit>(new Unit());
         }
         catch (Exception? e)
         {

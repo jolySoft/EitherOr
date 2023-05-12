@@ -2,6 +2,11 @@
 
 using Void;
 
+public interface ITry<TResult> : ITry
+{
+    TResult Result { get; }    
+}
+
 public interface ITry
 {
     bool IsSuccessful();

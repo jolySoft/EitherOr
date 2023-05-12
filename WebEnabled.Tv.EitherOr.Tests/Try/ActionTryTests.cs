@@ -5,7 +5,7 @@ using Shouldly;
 using WebEnabled.Tv.EitherOr;
 using WebEnabled.Tv.EitherOr.Void;
 
-public class TryTests
+public class ActionTryTests
 {
     [Fact]
     public void SuccessfulRunCanChainOnFinally()
@@ -26,7 +26,21 @@ public class TryTests
         var failure = Try.Run(() => rightRef.Throwly());
         
         //Don't like this assertion, think of a better way
-        failure.ShouldBeAssignableTo(expected.GetType());
+        failure.ShouldBeOfType(expected.GetType());
+        failure.IsFailure().ShouldBeTrue();
+    }
+
+    [Fact]
+    public void FailedRunCanChainOnFinally()
+    {
+        var rightRef = new RightStub("Initial");
+        var expected = new Failure(new ApplicationException());
+
+        var failure = Try.Run(() => rightRef.Throwly()).Finally(() => rightRef.Stringly = "Updated");
+        
+        //Don't like this assertion, think of a better way
+        failure.ShouldBeOfType(expected.GetType());
+        failure.IsFailure().ShouldBeTrue();
     }
 
     [Fact]
@@ -36,7 +50,7 @@ public class TryTests
 
         var either = Try.Run(() => rightRef.Stringly = "Updated").ToEither();
         
-        rightRef.Stringly.ShouldBe("Updated");
+            rightRef.Stringly.ShouldBe("Updated");
         either.IsRight.ShouldBeTrue();
         either.Get().ShouldBeEquivalentTo(new Unit());
     }
