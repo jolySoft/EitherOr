@@ -2,7 +2,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-public abstract class Either<TLeft, TRight> : IEither<TLeft, TRight>, IEitherMaps<TLeft, TRight>
+public abstract class Either<TLeft, TRight>
 {
     // ReSharper disable once InconsistentNaming
     protected TLeft _left;
@@ -21,25 +21,31 @@ public abstract class Either<TLeft, TRight> : IEither<TLeft, TRight>, IEitherMap
 
     public static Either<TLeft, TRight> Left(TLeft left) => new Left<TLeft, TRight>(left);
 
-    public IEither<TLeftResponse, TRightResponse> BiMap<TLeftResponse, TRightResponse>(Func<TLeft, TLeftResponse> leftFunc, Func<TRight, TRightResponse> rightFunc)
+    public Either<TLeftResponse, TRightResponse> BiMap<TLeftResponse, TRightResponse>(Func<TLeft, TLeftResponse> leftFunc, Func<TRight, TRightResponse> rightFunc)
     {
         if (IsRight) return new Right<TLeftResponse, TRightResponse>(rightFunc.Invoke(Get()));
 
         return new Left<TLeftResponse, TRightResponse>(leftFunc.Invoke(GetLeft()));
     }
 
-    public IEither<TLeft, TRightResponse> Map<TRightResponse>(Func<TRight, TRightResponse> rightFunc)
+    public Either<TLeft, TRightResponse> Map<TRightResponse>(Func<TRight, TRightResponse> rightFunc)
     {
-        return IsRight ? Either<TLeft, TRightResponse>.Right(rightFunc.Invoke(Get())) : new Left<TLeft, TRightResponse>(GetLeft());
+        return IsRight
+            ? Either<TLeft, TRightResponse>.Right(rightFunc.Invoke(Get()))
+            : Either<TLeft, TRightResponse>.Left(GetLeft());
     }
 
-    public IEither<TLeftResponse, TRight> MapLeft<TLeftResponse>(Func<TLeft, TLeftResponse> leftFunc)
+    public Either<TLeftResponse, TRight> MapLeft<TLeftResponse>(Func<TLeft, TLeftResponse> leftFunc)
     {
-        return IsLeft ? Either<TLeftResponse, TRight>.Left(leftFunc.Invoke(GetLeft())) : Either<TLeftResponse, TRight>.Right(Get());
+        return IsLeft
+            ? Either<TLeftResponse, TRight>.Left(leftFunc.Invoke(GetLeft()))
+            : Either<TLeftResponse, TRight>.Right(Get());
     }
 
-    // public Either<TLeft, TRightResponse> FlatMap<TRightResponse>(Func<TRight, Either<TLeft, TRightResponse>> rightFunc)
-    // {
-    //     return IsRight ? (Either<TLeft, TRightResponse>)rightFunc.Invoke(Get())
-    // }
+    public Either<TLeft, TRightResponse> FlatMap<TRightResponse>(Func<TRight, Either<TLeft, TRightResponse>> rightFunc)
+    {
+        return IsRight
+            ? rightFunc.Invoke(Get())
+            : Either<TLeft, TRightResponse>.Left(GetLeft());
+    }
 }
