@@ -1,8 +1,9 @@
 ﻿namespace WebEnabled.Tv.EitherOr;
 
 using System.Diagnostics.CodeAnalysis;
+using Void;
 
-public abstract class Either<TLeft, TRight>
+public abstract class Either<TLeft, TRight>  //: IEnumerable<TRight>
 {
     // ReSharper disable once InconsistentNaming
     protected TLeft _left;
@@ -47,5 +48,15 @@ public abstract class Either<TLeft, TRight>
         return IsRight
             ? rightFunc.Invoke(Get())
             : Either<TLeft, TRightResponse>.Left(GetLeft());
+    }
+
+    public Unitable<Either<TLeft, TRight>> Filter(Predicate<TRight> predicate)
+    {
+        return IsLeft || predicate.Invoke(Get()) ? Unitable<Either<TLeft,TRight>>.Some(this) : Unitable<Either<TLeft, TRight>>.Unit();
+    }
+
+    public Either<TLeft, TRight> FilterOrElse(Predicate<TRight> predicate, Func<TRight, TLeft> elseFunc)
+    {
+        return IsLeft || predicate.Invoke(Get()) ? this : Either<TLeft, TRight>.Left(elseFunc.Invoke(Get()));
     }
 }

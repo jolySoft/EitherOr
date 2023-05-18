@@ -82,6 +82,6 @@ public class EitherMappingTests
 
         var right = _either.FlatMap(s => Either<int, RightStub>.Right(new RightStub(s.ToUpper())));
         
-        right.ShouldBeEquivalentTo(right);
+        right.ShouldBeEquivalentTo(expected);
     }
 }
