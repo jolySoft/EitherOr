@@ -1,8 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace WebEnabled.Tv.EitherOr;
 
-namespace WebEnabled.Tv.EitherOr;
+using System.Diagnostics.CodeAnalysis;
+using Void;
 
-public abstract class Either<TLeft, TRight>
+public abstract class Either<TLeft, TRight>  //: IEnumerable<TRight>
 {
     // ReSharper disable once InconsistentNaming
     protected TLeft _left;
@@ -30,11 +31,32 @@ public abstract class Either<TLeft, TRight>
 
     public Either<TLeft, TRightResponse> Map<TRightResponse>(Func<TRight, TRightResponse> rightFunc)
     {
-        return IsRight ? Either<TLeft, TRightResponse>.Right(rightFunc.Invoke(Get())) : new Left<TLeft, TRightResponse>(GetLeft());
+        return IsRight
+            ? Either<TLeft, TRightResponse>.Right(rightFunc.Invoke(Get()))
+            : Either<TLeft, TRightResponse>.Left(GetLeft());
     }
 
     public Either<TLeftResponse, TRight> MapLeft<TLeftResponse>(Func<TLeft, TLeftResponse> leftFunc)
     {
-        return IsLeft ? Either<TLeftResponse, TRight>.Left(leftFunc.Invoke(GetLeft())) : Either<TLeftResponse, TRight>.Right(Get());
+        return IsLeft
+            ? Either<TLeftResponse, TRight>.Left(leftFunc.Invoke(GetLeft()))
+            : Either<TLeftResponse, TRight>.Right(Get());
+    }
+
+    public Either<TLeft, TRightResponse> FlatMap<TRightResponse>(Func<TRight, Either<TLeft, TRightResponse>> rightFunc)
+    {
+        return IsRight
+            ? rightFunc.Invoke(Get())
+            : Either<TLeft, TRightResponse>.Left(GetLeft());
+    }
+
+    public Unitable<Either<TLeft, TRight>> Filter(Predicate<TRight> predicate)
+    {
+        return IsLeft || predicate.Invoke(Get()) ? Unitable<Either<TLeft,TRight>>.Some(this) : Unitable<Either<TLeft, TRight>>.Unit();
+    }
+
+    public Either<TLeft, TRight> FilterOrElse(Predicate<TRight> predicate, Func<TRight, TLeft> elseFunc)
+    {
+        return IsLeft || predicate.Invoke(Get()) ? this : Either<TLeft, TRight>.Left(elseFunc.Invoke(Get()));
     }
 }

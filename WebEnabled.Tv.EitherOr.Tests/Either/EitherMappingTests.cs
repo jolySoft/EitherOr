@@ -1,7 +1,8 @@
-﻿using Shouldly;
-using WebEnabled.Tv.EitherOr;
+﻿namespace WenEnabled.Tv.EitherOr.Tests.Either;
 
-namespace WenEnabled.Tv.NVar.Tests;
+using Shouldly;
+using Doubles;
+using WebEnabled.Tv.EitherOr;
 
 public class EitherMappingTests
 {
@@ -69,6 +70,17 @@ public class EitherMappingTests
         var expected = Either<int, string>.Right("a");
 
         var right = _either.MapLeft(i => i + 1);
+        
+        right.ShouldBeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void RightShouldFlatMapToEither()
+    {
+        _either = Either<int, string>.Right("a");
+        var expected = Either<int, RightStub>.Right(new RightStub("A"));
+
+        var right = _either.FlatMap(s => Either<int, RightStub>.Right(new RightStub(s.ToUpper())));
         
         right.ShouldBeEquivalentTo(expected);
     }

@@ -1,7 +1,9 @@
 ﻿using Shouldly;
-using WebEnabled.Tv.EitherOr;
+using WenEnabled.Tv.EitherOr.Tests.Doubles;
 
-namespace WenEnabled.Tv.NVar.Tests;
+namespace WenEnabled.Tv.EitherOr.Tests.Either;
+
+using WebEnabled.Tv.EitherOr;
 
 public class EitherStructuralTests
 {

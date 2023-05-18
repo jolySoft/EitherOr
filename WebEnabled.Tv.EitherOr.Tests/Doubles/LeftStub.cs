@@ -1,4 +1,4 @@
-﻿namespace WenEnabled.Tv.NVar.Tests;
+﻿namespace WenEnabled.Tv.EitherOr.Tests.Doubles;
 
 public class LeftStub
 {
