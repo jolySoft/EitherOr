@@ -47,4 +47,10 @@ public class FunctionTryTests
         failed.IsLeft.ShouldBeTrue();
         failed.GetLeft().ShouldBeAssignableTo(typeof(ApplicationException));
     }
+    //
+    // [Fact]
+    // public void SuccessfulTryFunctionalVariantCanChainOnFinally()
+    // {
+    //     
+    // }
 }

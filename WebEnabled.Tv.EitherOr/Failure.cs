@@ -13,7 +13,5 @@ public class Failure<TResult> : Try<TResult>
     
     public override bool IsFailure() => true;
 
-
     public override TResult Result => throw new NotImplementedException("This is a failure");
-    
 }

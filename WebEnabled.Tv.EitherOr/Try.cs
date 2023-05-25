@@ -2,11 +2,17 @@
 
 using Void;
 
-public abstract class Try<TResult> : Try, ITry<TResult>
+public abstract class Try<TResult> : ITry<TResult>
 {
     public abstract TResult Result { get; }
+    
+    public abstract bool IsSuccessful();
+    
+    public abstract bool IsFailure();
+    
+    public Exception? Exp { get; protected init; }
 
-    public static ITry<TResult> Of<TResult>(Func<TResult> func)
+    public static ITry<TResult> Of(Func<TResult> func)
     {
         try
         {
@@ -18,49 +24,22 @@ public abstract class Try<TResult> : Try, ITry<TResult>
             return new Failure<TResult>(e);
         }
     }
-    
+
     public new Either<Exception, TResult> ToEither()
     {
         return IsSuccessful() ? Either<Exception, TResult>.Right(Result) : Either<Exception, TResult>.Left(Exp);
     }
 }
 
-public abstract class Try : ITry
+public abstract class Try : Try<Unit>
 {
-    public abstract bool IsSuccessful();
-    
-    public abstract bool IsFailure();
-    
-    public Exception? Exp { get; protected init; }
-
-    public static ITry Run(Action action)
+    public static ITry<Unit> Run(Action action)
     {
-        try
+        return Of(() =>
         {
             action.Invoke();
-            return new Success<Unit>(new Unit());
-        }
-        catch (Exception? e)
-        {
-            return new Failure<Unit>(e);
-        }
+            return new Unit();
+        });
     }
+} 
 
-    public ITry Finally(Action action)
-    {
-        try
-        {
-            action.Invoke();
-            return this;
-        }
-        catch (Exception? e)
-        {
-            return new Failure<Unit>(e);
-        }
-    }
-
-    public Either<Exception, Unit> ToEither()
-    {
-        return IsSuccessful() ? Either<Exception, Unit>.Right(new Unit()) : Either<Exception, Unit>.Left(Exp ?? throw new InvalidOperationException());
-    }
-}
