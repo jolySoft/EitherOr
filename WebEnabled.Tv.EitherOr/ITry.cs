@@ -40,7 +40,7 @@ public interface ITry
         }
         catch (Exception? e)
         {
-            return new Failure(e);
+            return new Failure<Unit>(e);
         }
     }
     

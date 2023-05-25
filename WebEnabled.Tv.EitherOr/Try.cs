@@ -42,7 +42,7 @@ public abstract class Try : ITry
         }
         catch (Exception? e)
         {
-            return new Failure(e);
+            return new Failure<Unit>(e);
         }
     }
 
@@ -55,7 +55,7 @@ public abstract class Try : ITry
         }
         catch (Exception? e)
         {
-            return new Failure(e);
+            return new Failure<Unit>(e);
         }
     }
 

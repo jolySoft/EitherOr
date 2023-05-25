@@ -33,6 +33,18 @@ public class FunctionTryTests
     [Fact]
     public void SuccessfulTryShouldGiveRightToEither()
     {
+        var success = Try<RightStub>.Of(() => new RightStub("Initial")).ToEither();
         
+        success.IsRight.ShouldBeTrue();
+        success.Get().Stringly.ShouldBe("Initial");
+    }
+
+    [Fact]
+    public void FailedTryShouldGiveLeftToEither()
+    {
+        var failed = Try<RightStub>.Of(() => new RightStub("Initial").Throwly()).ToEither();
+        
+        failed.IsLeft.ShouldBeTrue();
+        failed.GetLeft().ShouldBeAssignableTo(typeof(ApplicationException));
     }
 }

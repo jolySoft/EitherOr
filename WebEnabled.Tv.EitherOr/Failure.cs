@@ -2,42 +2,18 @@
 
 using Void;
 
-public class Failure<TResult> : Failure, ITry<TResult>
+public class Failure<TResult> : Try<TResult>
 {
-    public Failure(Exception? exp) : base(exp) {}
-    
-    // public bool IsSuccessful() => base.IsSuccessful();
-    //
-    // public bool IsFailure() => base.IsSuccessful();
-
-    // public Either<Exception, Unit> ToEither()
-    // {
-    //     throw new NotImplementedException();
-    // }
-
-    public TResult Result => throw new NotImplementedException("This is a failure");
-    
-    Either<Exception, TResult> ITry<TResult>.ToEither()
-    {
-        throw new NotImplementedException();
-    }
-}
-
-public class Failure : ITry
-{
-    public Failure(Exception? exp)
+    public Failure(Exception exp)
     {
         Exp = exp;
     }
-
-    public bool IsSuccessful() => false;
-
-    public bool IsFailure() => true;
     
-    public Exception? Exp { get; }
+    public override bool IsSuccessful() => false;
     
-    public Either<Exception, Unit> ToEither()
-    {
-        return Either<Exception, Unit>.Left(Exp);
-    }
+    public override bool IsFailure() => true;
+
+
+    public override TResult Result => throw new NotImplementedException("This is a failure");
+    
 }
