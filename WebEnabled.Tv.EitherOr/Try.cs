@@ -25,6 +25,19 @@ public abstract class Try<TResult> : ITry<TResult>
         }
     }
 
+    public static ITry<TResult> Of(object[] param, Delegate func)
+    {
+        try
+        {
+            var result = (TResult) func.DynamicInvoke(param);
+            return new Success<TResult>(result);
+        }
+        catch (Exception e)
+        {
+            return new Failure<TResult>(e);
+        }
+    }
+
     public new Either<Exception, TResult> ToEither()
     {
         return IsSuccessful() ? Either<Exception, TResult>.Right(Result) : Either<Exception, TResult>.Left(Exp);
