@@ -2,9 +2,17 @@
 
 using Void;
 
-public interface ITry<TResult> : ITry
+public interface ITry<TResult>
 {
+    bool IsSuccessful();
+
+    bool IsFailure();
+    
+    Exception? Exp { get; }
+    
     TResult Result { get; }
+
+    //ITry<TResult> Of(Func<TResult> func);
 
     new ITry<TResult> Finally(Action action)
     {
@@ -20,29 +28,4 @@ public interface ITry<TResult> : ITry
     }
     
     new Either<Exception, TResult> ToEither();
-    
-}
-
-public interface ITry
-{
-    bool IsSuccessful();
-
-    bool IsFailure();
-    
-    Exception? Exp { get; }
-
-    ITry Finally(Action action)
-    {
-        try
-        {
-            action.Invoke();
-            return this;
-        }
-        catch (Exception? e)
-        {
-            return new Failure(e);
-        }
-    }
-    
-    Either<Exception, Unit> ToEither();
 }
